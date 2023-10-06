@@ -39,9 +39,8 @@ export function mapProductsToDisplayVersion(
     }
     const version = product.versions[0];
     const displayVersion: DisplayVersion = {
-      description_html: version.description_html,
-      traffic_percentage: version.traffic_percentage,
       hero_image_url: version.images.image_url,
+      ...version,
     };
     obj[externalId] = displayVersion;
   });

@@ -1,8 +1,8 @@
-// homeController.ts
 import express from "express";
 import { mapProductsToDisplayVersion } from "./types";
 import { getDisplayVersionsForStore } from "./supabase.server";
 import { check, validationResult } from "express-validator";
+import he from "he";
 
 const router = express.Router();
 
@@ -16,13 +16,13 @@ router.get(
     }
 
     try {
-      const storeId = req.query.storeID;
+      const storeId = he.decode(req.query.storeID);
 
       const data = await getDisplayVersionsForStore(storeId);
 
       const mappedData = mapProductsToDisplayVersion(data);
 
-      res.send({ mappedData: mappedData });
+      res.send(mappedData);
     } catch (e) {
       console.log(e);
       throw e;
