@@ -8,7 +8,6 @@ import {
   buildDBSessionInput,
   nonCheckoutEventInputToMergeObject,
 } from "./event_types";
-import { usedGeneratedVersion } from "./helpers";
 
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
