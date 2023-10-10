@@ -22,6 +22,31 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_API_KEY, {
   auth: { persistSession: false },
 });
 
+export const getDisplayVersionsForProduct = async (
+  productId: string
+): Promise<Product> => {
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select(
+        // TODO: (2) reconsider passing version id directly to frontend
+        `external_id, versions!inner(id, description_html, traffic_percentage, images!inner(image_url))`
+      )
+      .eq("external_id", "gid://shopify/Product/" + productId)
+      .eq("versions.status", "active")
+      .single();
+
+    if (error) throw error;
+
+    console.log("data", JSON.stringify(data, null, 2));
+
+    return data;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
 export const getDisplayVersionsForStore = async (
   storeId: string
 ): Promise<Product[]> => {
