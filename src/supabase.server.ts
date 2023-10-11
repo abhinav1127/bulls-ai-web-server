@@ -24,7 +24,7 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_API_KEY, {
 
 export const getDisplayVersionsForProduct = async (
   productId: string
-): Promise<Product> => {
+): Promise<Product[]> => {
   try {
     const { data, error } = await supabase
       .from("products")
@@ -33,8 +33,7 @@ export const getDisplayVersionsForProduct = async (
         `external_id, versions!inner(id, description_html, traffic_percentage, images!inner(image_url))`
       )
       .eq("external_id", "gid://shopify/Product/" + productId)
-      .eq("versions.status", "active")
-      .single();
+      .eq("versions.status", "active");
 
     if (error) throw error;
 

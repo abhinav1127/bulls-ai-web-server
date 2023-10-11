@@ -18,9 +18,14 @@ router.get(
     try {
       const productId = he.decode(req.query.productID);
 
-      const product = await getDisplayVersionsForProduct(productId);
+      const versions = await getDisplayVersionsForProduct(productId);
+      if (versions.length > 1) {
+        throw new Error(
+          `Product with external_id ${productId} has more than 1 active version.`
+        );
+      }
 
-      res.send(product);
+      res.send(versions);
     } catch (e) {
       console.log(e);
       throw e;
