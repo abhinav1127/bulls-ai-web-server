@@ -27,13 +27,13 @@ export const getDisplayVersionsForProduct = async (
 ): Promise<Product[]> => {
   try {
     const { data, error } = await supabase
-      .from("products")
+      .from("versions")
       .select(
         // TODO: (2) reconsider passing version id directly to frontend
-        `external_id, versions!inner(id, description_html, traffic_percentage, images!inner(image_url))`
+        `id, description_html, traffic_percentage, images!inner(image_url), products!inner()`
       )
-      .eq("external_id", "gid://shopify/Product/" + productId)
-      .eq("versions.status", "active");
+      .eq("products.external_id", "gid://shopify/Product/" + productId)
+      .eq("status", "active");
 
     if (error) throw error;
 
