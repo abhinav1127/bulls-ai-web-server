@@ -55,7 +55,7 @@ export interface DBEventInput extends DBEventStatisticsInput {
 
 export function buildDBSessionInput(event: Event): DBSessionInput {
   return {
-    store_external_id: "gid://shopify/Shop/" + event.storeId,
+    store_external_id: event.storeId,
     session_id: event.sessionId,
     client_id: event.clientID,
     external_timestamp: event.timestamp,
