@@ -8,6 +8,7 @@ import {
   buildDBSessionInput,
   nonCheckoutEventInputToMergeObject,
 } from "./event_types";
+import { stripShopifyShopPrefixIfPresent } from "./helpers";
 
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
@@ -50,7 +51,8 @@ export const getDisplayVersionsForStore = async (
   storeId: string
 ): Promise<Product[]> => {
   try {
-    console.log("storeId", storeId);
+    const strippedStoreId = stripShopifyShopPrefixIfPresent(storeId);
+    console.log("storeId", strippedStoreId);
 
     const { data, error } = await supabase
       .from("products")
@@ -58,7 +60,7 @@ export const getDisplayVersionsForStore = async (
         // TODO: (2) reconsider passing version id directly to frontend
         `external_id, stores!inner(), versions!inner(id, description_html, traffic_percentage, images!inner(image_url))`
       )
-      .eq("stores.external_id", "gid://shopify/Shop/" + storeId)
+      .eq("stores.external_id", "gid://shopify/Shop/" + strippedStoreId)
       .eq("versions.status", "active");
 
     if (error) throw error;
